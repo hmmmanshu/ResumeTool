@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+  selector:
+    app: mysql
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+  type: NodePort # Use LoadBalancer if your Kind cluster supports it (e.g., Docker Desktop).  If not, use NodePort.
+  # type: NodePort # Use NodePort if LoadBalancer is not available.  You'll then access MySQL on a node's IP and the assigned port.
