@@ -1,0 +1,8 @@
+flask 
+flask-restful 
+flask-jwt-extended 
+flask-sqlalchemy 
+flask-migrate 
+boto3 
+openai 
+mysql-connector-python
