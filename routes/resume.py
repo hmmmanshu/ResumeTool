@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import db, Resume
-from services.s3_upload import upload_file_to_s3
+from services.s3_service import upload_file_to_s3
 
 resume_bp = Blueprint('resume', __name__)
 
@@ -9,7 +9,6 @@ resume_bp = Blueprint('resume', __name__)
 @jwt_required()
 def upload_resume():
     user_id = get_jwt_identity()
-    print(request.files)
     file = request.files['file']
     if not file:
         return jsonify({"error": "No file provided"}), 400
@@ -28,5 +27,3 @@ def list_resumes():
     resumes = Resume.query.filter_by(user_id=user_id).all()
     return jsonify([{"resume_id": r.id, "file_url": r.file_url} for r in resumes])
 
-
-# TODO: Add fucntionality to delete or download resume
