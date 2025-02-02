@@ -9,11 +9,12 @@ generate_bp = Blueprint('generate', __name__)
 @jwt_required()
 def generate_cover_letter():
     user_id = get_jwt_identity()
-    data = request.get_json()
+    data = request.form
+    file = request.files['file']
     thread_id = User.query.filter_by(id=user_id).first().thread_id
     print(f"thread recieved, {thread_id}")
     cover_letter = generate_text(
-        f"Generate a {data['tone']} cover letter for the following job description:\n\n{data['job_description']}", thread_id
+        f"Generate a {data['tone']} cover letter for the following job description:\n\n{data['job_description']} based on the file attached as resume", thread_id, file
     )
     new_doc = GeneratedDocument(user_id=user_id, type="cover_letter", content=cover_letter, resume_id=data['resume_id'])
     db.session.add(new_doc)
