@@ -22,9 +22,10 @@ def generate_cover_letter():
 
     return jsonify({"generated_text": cover_letter}), 200
 
-@generate_bp.route('/enhance_resume', methods=['POST'])
+@generate_bp.route('/analyze_resume', methods=['POST'])
 @jwt_required()
-def enhance_resume():
+def analyze_resume():
+    # This function is incomplete. improve it to scan resume and suggest edits
     user_id = get_jwt_identity()
     data = request.get_json()
 
@@ -36,4 +37,12 @@ def enhance_resume():
     db.session.add(new_doc)
     db.session.commit()
 
-    return jsonify({"enhanced_resume": enhanced_resume})
+    return jsonify({"enhanced_resume": enhanced_resume}), 200
+
+
+@generate_bp.route('/enhance_resume', methods=['POST'])
+@jwt_required
+def enhance_resume():
+    # Get the latex code for a resume and improve the resume
+    return jsonify({"Not yet implemented"}), 200
+    

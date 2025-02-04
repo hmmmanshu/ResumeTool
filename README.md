@@ -9,7 +9,7 @@ One more trial at yet another project
 - Create a service to access mysql
 
 Deployment order 
-- local storage > create mount fodler inside the node > SS > svc
+- local storage > create mount folder inside the node > SS > svc
 
 ## GenAI
 - Make use of assistant feature in OpanAI, and create threads and then make runs
