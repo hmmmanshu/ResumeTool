@@ -3,7 +3,7 @@ import config
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import User
 
-def generate_text(prompt, thread_id, file):
+def generate_text(prompt, thread_id, file=None):
     # Thread id corresponse to a specific user's thread
     client = OpenAI(api_key=config.Config.OPENAI_API_KEY)
     assistant_id = config.Config.OPENAI_ASSISTANT_ID
@@ -36,8 +36,8 @@ def upload_file_to_openai(file):
 
 def create_thread():
     # Create a thread for a new user
+    print("Creating new thread")
     client = OpenAI(api_key=config.Config.OPENAI_API_KEY)
-    # TODO: add a try except here
     thread = client.beta.threads.create()
     print(f"Thread id, {thread.id}")
     return thread.id

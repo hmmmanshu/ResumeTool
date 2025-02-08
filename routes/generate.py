@@ -1,31 +1,40 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from models import db, GeneratedDocument, User
-from services.ai_service import generate_text
+from models import db, OpenAIThread
+from services.openai import generate_text
 
 generate_bp = Blueprint('generate', __name__)
-
-@generate_bp.route('/cover_letter_without_resume', methods=['POST'])
-@jwt_required()
-def generate_cover_letter_without_resume():
-    return 'This fucntions not implemented yet', 200
 
 @generate_bp.route('/cover_letter', methods=['POST'])
 @jwt_required()
 def generate_cover_letter():
     user_id = get_jwt_identity()
     data = request.form
-    file = request.files['file']
-    thread_id = User.query.filter_by(id=user_id).first().thread_id
-    print(f"thread recieved, {thread_id}")
-    cover_letter = generate_text(
-        f"Generate a short {data['tone']} cover letter for the following job description:\n\n{data['job_description']} based on the file attached as resume. Do not give any explanation or extra text other than the cover letter itself.", thread_id, file
-    )
-    # new_doc = GeneratedDocument(user_id=user_id, type="cover_letter", content=cover_letter, resume_id=data['resume_id'])
-    # db.session.add(new_doc)
-    # db.session.commit()
-
+    print("User id in generate cover rout", user_id)
+    thread_id = OpenAIThread.query.filter_by(user_id=user_id).first().id
+    print(f"Inside /cover_letter, Thread recieved, {thread_id}")
+    if 'file' in request.files:
+        cover_letter = generate_text(
+            f"Generate a short {data['tone']} cover letter for the following job description:\n\n{data['job_description']} based on the file attached as resume.", thread_id, request.files['file']
+        )
+    else:
+        cover_letter = generate_text(
+            f"Generate a short {data['tone']} cover letter for the following job description:\n\n{data['job_description']}.", thread_id
+        )
     return jsonify({"generated_text": cover_letter}), 200
+
+@generate_bp.route('/cover_letter_modify', methods=['POST'])
+@jwt_required()
+def modify_cover_letter():
+    # Imrpove the cover letter generated in above step
+    # The prompt passed to generate_text() might need improvement. This is being fed from user directly
+    user_id = get_jwt_identity()
+    data = request.form
+    thread_id = Thread.query.filter_by(id=user_id).first().thread_id
+    print(f"Inside /cover_letter_modfiy, Thread recieved, {thread_id}")
+    cover_letter = generate_text(
+        data['job_description'], thread_id
+    )
 
 @generate_bp.route('/analyze_resume', methods=['POST'])
 @jwt_required()
@@ -38,10 +47,6 @@ def analyze_resume():
         f"Improve the resume content with a {data['tone']} tone:\n\n{data['resume_id']}"
     )
 
-    new_doc = GeneratedDocument(user_id=user_id, type="resume_enhancement", content=enhanced_resume)
-    db.session.add(new_doc)
-    db.session.commit()
-
     return jsonify({"enhanced_resume": enhanced_resume}), 200
 
 
@@ -50,4 +55,3 @@ def analyze_resume():
 def enhance_resume():
     # Get the latex code for a resume and improve the resume
     return jsonify({"Not yet implemented"}), 200
-    
