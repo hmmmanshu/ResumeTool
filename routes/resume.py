@@ -26,4 +26,3 @@
 #     user_id = get_jwt_identity()
 #     resumes = Resume.query.filter_by(user_id=user_id).all()
 #     return jsonify([{"resume_id": r.id, "file_url": r.file_url} for r in resumes])
-
