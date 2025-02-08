@@ -6,9 +6,12 @@ from routes.auth import auth_bp
 from routes.resume import resume_bp
 from routes.generate import generate_bp
 from routes.health import health_bp
+from flask_cors import CORS
+
 import config
 
 app = Flask(__name__)
+CORS(app)
 app.config.from_object(config.Config)
 
 db.init_app(app)

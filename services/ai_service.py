@@ -22,11 +22,11 @@ def generate_text(prompt, thread_id, file):
         return str(messages.data[0].content[0].text.value)
     else:
         print(run.status)
+        print(run.last_error)
 
 
 def upload_file_to_openai(file):
     client = OpenAI(api_key=config.Config.OPENAI_API_KEY)
-    assistant_id = config.Config.OPENAI_ASSISTANT_ID
     response = client.files.create(
         file=(file.filename, file.stream, file.mimetype),
         purpose="assistants"
