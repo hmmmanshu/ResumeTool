@@ -2,9 +2,11 @@ from app import db
 from services.openai import delete_openai_file, delete_openai_thread
 from models import OpenAIFile, OpenAIThread
 
+
 def wipe_user_session(user_id):
     wipe_user_threads(user_id)
     wipe_user_files(user_id)
+
 
 def wipe_user_threads(user_id):
     print("Started thread wipe")
@@ -13,6 +15,7 @@ def wipe_user_threads(user_id):
         delete_openai_thread(thread.id)
         db.session.delete(thread)
     db.session.commit()
+
 
 def wipe_user_files(user_id):
     print("Started file wipe")

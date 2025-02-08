@@ -29,9 +29,10 @@ def login():
         return jsonify(access_token=access_token)
     return jsonify({"message": "Invalid credentials"}), 401
 
+
 @auth_bp.route("/logout", methods=["GET"])
 @jwt_required()
 def logout():
     user_id = get_jwt_identity()
     wipe_user_session(user_id)
-    return jsonify({'message': 'User logged out'}), 200
+    return jsonify({"message": "User logged out"}), 200
