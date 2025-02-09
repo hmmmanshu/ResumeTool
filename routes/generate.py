@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from models import db, OpenAIThread, OpenAIFile
+from models import OpenAIThread
 from services.openai import generate_text, create_thread
 from utils.wipe_utils import wipe_user_session
 
