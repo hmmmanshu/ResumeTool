@@ -15,7 +15,6 @@ def generate_cover_letter():
     data = request.form
     thread_id = OpenAIThread.query.filter_by(user_id=user_id).first().id
 
-    print(f"Inside /cover_letter, Thread recieved, {thread_id}")
     if "file" in request.files:
         cover_letter = generate_text(
             f"Generate a short {data['tone']} cover letter for the following job description:\n\n{data['job_description']} based on the file attached as resume.",
@@ -38,7 +37,7 @@ def modify_cover_letter():
     # The prompt passed to generate_text() might need improvement. This is being fed from user directly
     user_id = get_jwt_identity()
     data = request.form
-    thread_id = Thread.query.filter_by(id=user_id).first().thread_id
+    thread_id = OpenAIThread.query.filter_by(id=user_id).first().thread_id
     cover_letter = generate_text(data["job_description"], thread_id)
 
 

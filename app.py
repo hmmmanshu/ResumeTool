@@ -1,6 +1,5 @@
 from flask import Flask
 from flask_jwt_extended import JWTManager
-from flask_sqlalchemy import SQLAlchemy
 from models import db
 from routes.auth import auth_bp
 from routes.generate import generate_bp
