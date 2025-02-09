@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import OpenAIThread
-from services.openai import generate_text, create_thread
+from services.openai_services import generate_cover_letter, create_thread
 from utils.wipe_utils import wipe_user_session
 
 generate_bp = Blueprint("generate", __name__)
@@ -16,14 +16,14 @@ def generate_cover_letter():
     thread_id = OpenAIThread.query.filter_by(user_id=user_id).first().id
 
     if "file" in request.files:
-        cover_letter = generate_text(
+        cover_letter = generate_cover_letter(
             f"Generate a short {data['tone']} cover letter for the following job description:\n\n{data['job_description']} based on the file attached as resume.",
             thread_id,
             request.files["file"],
             user_id,
         )
     else:
-        cover_letter = generate_text(
+        cover_letter = generate_cover_letter(
             f"Generate a short {data['tone']} cover letter for the following job description:\n\n{data['job_description']}.",
             thread_id,
         )
@@ -38,7 +38,7 @@ def modify_cover_letter():
     user_id = get_jwt_identity()
     data = request.form
     thread_id = OpenAIThread.query.filter_by(id=user_id).first().thread_id
-    cover_letter = generate_text(data["job_description"], thread_id)
+    cover_letter = generate_cover_letter(data["job_description"], thread_id)
 
 
 @generate_bp.route("/start_over", methods=["GET"])
@@ -48,24 +48,3 @@ def start_over():
     wipe_user_session(user_id)
     create_thread(user_id)
     return jsonify({"message": "Thread created."}), 200
-
-
-@generate_bp.route("/analyze_resume", methods=["POST"])
-@jwt_required()
-def analyze_resume():
-    # This function is incomplete. improve it to scan resume and suggest edits
-    user_id = get_jwt_identity()
-    data = request.get_json()
-
-    enhanced_resume = generate_text(
-        f"Improve the resume content with a {data['tone']} tone:\n\n{data['resume_id']}"
-    )
-
-    return jsonify({"enhanced_resume": enhanced_resume}), 200
-
-
-@generate_bp.route("/enhance_resume", methods=["POST"])
-@jwt_required
-def enhance_resume():
-    # Get the latex code for a resume and improve the resume
-    return jsonify({"Not yet implemented"}), 200

@@ -1,35 +1,27 @@
 from openai import OpenAI
 import config
-from flask_jwt_extended import jwt_required, get_jwt_identity
-from models import User, OpenAIFile, OpenAIThread
+from models import OpenAIFile, OpenAIThread
 from app import db
 
 
-def generate_text(prompt, thread_id, file=None, user_id=None):
+def generate_cover_letter(prompt, thread_id, file=None, user_id=None):
     client = OpenAI(api_key=config.Config.OPENAI_API_KEY)
-    assistant_id = config.Config.OPENAI_ASSISTANT_ID
+    assistant_id = config.Config.OPENAI_ASSISTANT_COVER_LETTER_CREATE
     if file:
         file_id = upload_file_to_openai(file, user_id)
-        message = client.beta.threads.messages.create(
+        client.beta.threads.messages.create(
             thread_id=thread_id,
             role="user",
             content=prompt,
             attachments=[{"file_id": file_id, "tools": [{"type": "file_search"}]}],
         )
     else:
-        message = client.beta.threads.messages.create(
+        client.beta.threads.messages.create(
             thread_id=thread_id, role="user", content=prompt
         )
 
-    run = client.beta.threads.runs.create_and_poll(
-        thread_id=thread_id, assistant_id=assistant_id
-    )
-    if run.status == "completed":
-        messages = client.beta.threads.messages.list(thread_id=thread_id)
-        return str(messages.data[0].content[0].text.value)
-    else:
-        print(run.status)
-        print(run.last_error)
+    cover_letter = execute_run(thread_id, assistant_id)
+    return cover_letter
 
 
 def upload_file_to_openai(file, user_id):
@@ -73,3 +65,26 @@ def delete_openai_thread(thread_id):
     client = OpenAI(api_key=config.Config.OPENAI_API_KEY)
     response = client.beta.threads.delete(thread_id)
     print(f"Thread delete status :{response.deleted}")
+
+
+def generate_resume_code(prompt, thread_id):
+    client = OpenAI(api_key=config.Config.OPENAI_API_KEY)
+    assistant_id = config.Config.OPENAI_ASSISTANT_RESUME_CREATE
+    client.beta.threads.messages.create(
+        thread_id=thread_id, role="user", content=prompt
+    )
+    latex_code = execute_run(thread_id, assistant_id)
+    return latex_code
+
+
+def execute_run(client, thread_id, assistant_id):
+    run = client.beta.threads.runs.create_and_poll(
+        thread_id=thread_id, assistant_id=assistant_id
+    )
+    if run.status == "completed":
+        messages = client.beta.threads.messages.list(thread_id=thread_id)
+        return str(messages.data[0].content[0].text.value)
+    else:
+        print(run.status)
+        print(run.last_error)
+        return run.last_error
