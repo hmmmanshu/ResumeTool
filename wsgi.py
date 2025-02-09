@@ -1,13 +1,4 @@
-import logging
-from app import app, db
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,  # Set logging level
-    format="%(asctime)s - %(levelname)s - %(message)s",
-)
-
-logger = logging.getLogger(__name__)
+from app import app, db, logger
 
 if __name__ == "__main__":
     logger.info("Starting application...")

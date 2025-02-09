@@ -5,11 +5,20 @@ from routes.auth import auth_bp
 from routes.generate import generate_bp
 from routes.health import health_bp
 from flask_cors import CORS
+import logging
 
 import config
 
 app = Flask(__name__)
 CORS(app)
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+)
+
+logger = logging.getLogger(__name__)
+
 app.config.from_object(config.Config)
 
 db.init_app(app)
