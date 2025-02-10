@@ -1,5 +1,5 @@
 from app import db
-from services.openai_services import delete_openai_file, delete_openai_thread
+from services.openai import delete_openai_file, delete_openai_thread
 from models import OpenAIFile, OpenAIThread
 
 

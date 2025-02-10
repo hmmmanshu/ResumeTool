@@ -2,7 +2,7 @@ from flask import Flask
 from flask_jwt_extended import JWTManager
 from models import db
 from routes.auth import auth_bp
-from routes.cover_letter import generate_bp
+from routes.generate import generate_bp
 from routes.health import health_bp
 from routes.resume import resume_bp
 from flask_cors import CORS
