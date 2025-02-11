@@ -9,4 +9,4 @@ if __name__ == "__main__":
         logger.info("Database tables created successfully!")
 
     logger.info("Running Flask application...")
-    app.run(debug=True)
+    app.run(debug=False)

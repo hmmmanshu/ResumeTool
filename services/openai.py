@@ -10,14 +10,14 @@ def generate_text(prompt, thread_id, file=None, user_id=None):
     assistant_id = config.Config.OPENAI_ASSISTANT_ID
     if file:
         file_id = upload_file_to_openai(file, user_id)
-        message = client.beta.threads.messages.create(
+        client.beta.threads.messages.create(
             thread_id=thread_id,
             role="user",
             content=prompt,
             attachments=[{"file_id": file_id, "tools": [{"type": "file_search"}]}],
         )
     else:
-        message = client.beta.threads.messages.create(
+        client.beta.threads.messages.create(
             thread_id=thread_id, role="user", content=prompt
         )
 
