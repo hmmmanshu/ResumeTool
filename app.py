@@ -14,7 +14,7 @@ app = Flask(__name__)
 CORS(app)
 
 logger = logging.getLogger("werkzeug")
-logger.setLevel(logging.ERROR)
+logger.setLevel(logging.INFO)
 
 app.config.from_object(config.Config)
 

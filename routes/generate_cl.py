@@ -7,7 +7,7 @@ from utils.wipe_utils import wipe_user_session
 
 generate_bp = Blueprint("generate", __name__)
 
-
+# We could clear the thread here
 @generate_bp.route("/cover_letter", methods=["POST"])
 @jwt_required()
 def generate_cover_letter():
