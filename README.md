@@ -1,5 +1,7 @@
 # ResumeCraft
 
+Create overleaf styled resume and cover letters using GenAI.
+
 Backend for ResumeCraft
 
 ## SQL
